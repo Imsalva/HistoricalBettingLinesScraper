@@ -12,6 +12,9 @@ closeDay <- bothDates[6]
 startDate <- as.Date(paste(startYear,"-",startMonth,"-",startDay, sep=""))
 closeDate <- as.Date(paste(closeYear,"-",closeMonth,"-",closeDay,sep=""))
 difference <- as.integer(closeDate-startDate+1)
+
+no_odds <- "\r\n                  No odds available at this time for this league\r\n               "
+
 for(i in 1:difference){
   currentDate <- startDate+i-1
   currDateString <- gsub("-","",currentDate)
@@ -19,7 +22,11 @@ for(i in 1:difference){
   SBhtml <- read_html(oddsURL)
 
 ###########################CLEANING FOR EACH DAILY URL################################################
-
+ 
+  if(html_text(html_nodes(SBhtml, "h3"))[1] == no_odds){
+    next()
+  }
+  
 team_names <- html_text(html_nodes(SBhtml, ".eventLine-value"))
 scores <- html_text(html_nodes(SBhtml, ".total"))
 FiveDimes <-  html_text(html_nodes(SBhtml, ".eventLine-book:nth-child(11) b"))
